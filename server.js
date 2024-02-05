@@ -24,7 +24,7 @@ app.get("^/$|/index(.html)?", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-//# others routes
+//# routes
 app.use("/api/v1", require("./routes/v1/root"));
 
 app.all("*", (req, res) => {

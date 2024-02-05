@@ -22,16 +22,16 @@ const generate = async (req, res, next) => {
   const { base, skin, mouth, nose, hair, ears, eyes } = sanitizedData;
 
   let imagePaths = [
-    path.join(ROOT_FOLDER, `base`, base),
-    path.join(ROOT_FOLDER, `base`, skin),
-    path.join(ROOT_FOLDER, `base`, mouth),
-    path.join(ROOT_FOLDER, `base`, nose),
-    path.join(ROOT_FOLDER, `base`, hair),
-    path.join(ROOT_FOLDER, `base`, ears),
-    path.join(ROOT_FOLDER, `base`, eyes),
+    path.join(ROOT_FOLDER, `base`, `${base}.png`),
+    path.join(ROOT_FOLDER, `skin`, `${base}`, `${skin}.png`),
   ];
   try {
-    const images = await Promise.all(imagePaths.map((filePath) => loadImage(filePath)));
+    const images = await Promise.all(
+      imagePaths.map((filePath) => {
+        console.log("pippo", filePath);
+        loadImage(filePath);
+      })
+    );
   } catch (err) {
     return next(new Failure(err.message, 500));
   }
@@ -40,6 +40,7 @@ const generate = async (req, res, next) => {
   //# Convert the canvas to a buffer and send it as the response
   const buffer = canvas.toBuffer("image/png");
   res.set("Content-Type", "image/png");
+  console.log(buffer);
   res.send(buffer);
 };
 
