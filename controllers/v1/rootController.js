@@ -12,8 +12,10 @@ const {
   EarsType,
   EyesType,
   EyesColors,
+  BgType,
 } = require("../../config/defines");
 const { existsSync } = require("fs");
+const { logWarn } = require("../../middleware/logger");
 
 const IMAGE_SIZE = 128; // Adjust this based on your image size
 const CANVAS_WIDTH = IMAGE_SIZE;
@@ -31,9 +33,20 @@ const generate = async (req, res, next) => {
   const sanitizedData = req.body;
 
   //# Extract parameters from the request body
-  const { base, skin, mouth, nose, hair, ears, eyes } = sanitizedData;
+  const {
+    bg = undefined, //# can by null(background transparent)
+    base,
+    skin,
+    mouth,
+    nose,
+    hair,
+    ears,
+    eyes,
+  } = sanitizedData;
 
+  //# check correctness of the params
   if (
+    (bg && !Object.keys(BgType).includes(bg)) || //! if bg is specified MUST be in the collection
     !Object.keys(BaseType).includes(base) ||
     !Object.keys(SkinType).includes(skin) ||
     !Object.keys(MouthType).includes(mouth) ||
@@ -44,27 +57,41 @@ const generate = async (req, res, next) => {
     !Object.keys(EyesType).includes(eyes.type) ||
     !Object.keys(EyesColors).includes(`${eyes.color}`)
   ) {
-    return next(new Failure("Error on validation", 400));
+    return next(
+      new Failure("Error on validation: " + JSON.stringify(sanitizedData), 400)
+    );
   }
 
-  let images;
+  logWarn(JSON.stringify(sanitizedData));
+
+  let images = [];
   try {
-    const imagePaths = [
-      path.join(ROOT_FOLDER, `base`, `${base}.png`),
-      path.join(ROOT_FOLDER, `skin`, `${base}`, `${skin}.png`),
-      path.join(ROOT_FOLDER, `mouth`, `${mouth}.png`),
-      path.join(ROOT_FOLDER, `nose`, `${nose}.png`),
-      path.join(ROOT_FOLDER, `eyes`, `${eyes.color}`, `${eyes.type}.png`),
+    let imagePaths = [
+      path.join(ROOT_FOLDER, `BASE`, `${base}.png`),
+      path.join(ROOT_FOLDER, `SKIN`, `${base}`, `${skin}.png`),
+      path.join(ROOT_FOLDER, `MOUTH`, `${mouth}.png`),
+      path.join(ROOT_FOLDER, `NOSE`, `${nose}.png`),
+      path.join(ROOT_FOLDER, `EYES`, `${eyes.color}`, `${eyes.type}.png`),
+      path.join(ROOT_FOLDER, `HAIR`, `${hair.color}`, `${hair.type}.png`),
+      path.join(ROOT_FOLDER, `EARS`, `${skin}`, `${ears}.png`),
     ];
+
+    //# if bg present, MUST be inserted before the others layers
+    if (bg) {
+      imagePaths.unshift(path.join(ROOT_FOLDER, `BACKGROUND`, `${bg}.png`));
+    }
+
+    //# we have to check if on the server the resources are found on the filesystem
     for (let i = 0; i < imagePaths.length; i++) {
       const path = imagePaths[i];
       if (!existsSync(path)) {
         throw new Failure(`No such file or directory for ${path}`);
       }
     }
+    //# then i can load in memory
     images = await Promise.all(
       imagePaths.map((filePath) => {
-        // console.log("path", filePath);
+        console.log("path", filePath);
         return loadImage(filePath);
       })
     );
@@ -72,7 +99,7 @@ const generate = async (req, res, next) => {
     if (error instanceof Failure) {
       return next(error);
     }
-    return next(new Failure("Error on validation", 500));
+    return next(new Failure("Load image failed", 500));
   }
 
   //# Create a canvas and context
@@ -83,7 +110,7 @@ const generate = async (req, res, next) => {
     for (let index = 0; index < images.length; index++) {
       const image = images[index];
       context.drawImage(image, 0, 0, IMAGE_SIZE, IMAGE_SIZE);
-      //# Optional: Watermark
+      //TODO Optional: Watermark
       // context.font = "20px "; // Use the font you registered
       // context.fillStyle = "white";
       // context.fillText(`Image ${index + 1}`, 0 + 10, 0 + 30);

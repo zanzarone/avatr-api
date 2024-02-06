@@ -1,5 +1,16 @@
+const BgType = {
+  BG1: "BG1",
+  BG2: "BG2",
+  BG3: "BG3",
+  BG4: "BG4",
+  BG5: "BG5",
+  BG6: "BG6",
+  BG7: "BG7",
+};
+
 const BaseType = {
   B1: "B1",
+  B2: "B2",
 };
 
 const SkinType = {
@@ -74,6 +85,7 @@ const HairColors = {
 };
 
 module.exports = {
+  BgType: Object.freeze(BgType),
   BaseType: Object.freeze(BaseType),
   SkinType: Object.freeze(SkinType),
   EyesType: Object.freeze(EyesType),
