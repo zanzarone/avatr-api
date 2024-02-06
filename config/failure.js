@@ -16,4 +16,4 @@ class Failure extends Error {
   }
 }
 
-module.exports = { FailureClass: Failure };
+module.exports = { Failure };

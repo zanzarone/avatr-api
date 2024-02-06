@@ -1,4 +1,4 @@
-const { FailureClass } = require("../config/failure");
+const { Failure } = require("../config/failure");
 const { logEvents } = require("./logger");
 
 const chalk = require("chalk");
@@ -12,8 +12,8 @@ const logError = (text) => log(chalk.red(text));
 
 const errorHandler = (err, req, res, next) => {
   let status;
-  if (err instanceof FailureClass) {
-    status = err.code;
+  if (err instanceof Failure) {
+    status = err.code ?? 500;
   } else {
     //! server error, if is not applicable
     status = res.statusCode ? res.statusCode : 500;
@@ -22,7 +22,7 @@ const errorHandler = (err, req, res, next) => {
   let line = `${err.name}: [${err.message}]\t[${req.method}]\t[${req.url}]\t[${req.headers.origin}]`;
   //TODO in a file, for now. Then will be applied to mongo db
   logEvents(line, "errLog.log");
-  line = `Status ${status}: ${line}`;
+  line = `Status ${status} - ${line}`;
   if (status >= 200 && status < 300) {
     logSuccess(line);
   } else if (status >= 300 && status < 400) {
