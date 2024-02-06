@@ -29,7 +29,6 @@ const generate = async (req, res, next) => {
 
   //# Il corpo JSON è valido e sanitizzato
   const sanitizedData = req.body;
-  console.log(sanitizedData);
 
   //# Extract parameters from the request body
   const { base, skin, mouth, nose, hair, ears, eyes } = sanitizedData;
@@ -65,7 +64,7 @@ const generate = async (req, res, next) => {
     }
     images = await Promise.all(
       imagePaths.map((filePath) => {
-        console.log("path", filePath);
+        // console.log("path", filePath);
         return loadImage(filePath);
       })
     );
@@ -95,7 +94,6 @@ const generate = async (req, res, next) => {
   //# Convert the canvas to a buffer and send it as the response
   const buffer = canvas.toBuffer("image/png");
   res.set("Content-Type", "image/png");
-  console.log(buffer);
   res.send(buffer);
 };
 

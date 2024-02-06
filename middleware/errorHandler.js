@@ -1,14 +1,5 @@
 const { Failure } = require("../config/failure");
-const { logEvents } = require("./logger");
-
-const chalk = require("chalk");
-
-const log = console.log;
-chalk.level = 1; // Use colours in the VS Code Debug Window
-
-const logSuccess = (text) => log(chalk.red(text));
-const logWarn = (text) => log(chalk.red(text));
-const logError = (text) => log(chalk.red(text));
+const { logEvents, logError, logSuccess, logWarn } = require("./logger");
 
 const errorHandler = (err, req, res, next) => {
   let status;
