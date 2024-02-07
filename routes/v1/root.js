@@ -10,12 +10,12 @@ const validateGenerateRequestBody = [
   body("mouth").isString().escape(),
   body("nose").isString().escape(),
   body("hair.type").isString().escape(),
-  body("hair.color").isInt().toInt(),
-  body("eyes.color").isInt().toInt(),
+  body("hair.color").isString().escape().toInt(),
+  body("eyes.color").isString().escape().toInt(),
   body("eyes.type").isString().escape(),
   body("ears").isString().escape(),
 ];
 
-router.get("/generate", validateGenerateRequestBody, rootController.generate);
+router.post("/generate", validateGenerateRequestBody, rootController.generate);
 
 module.exports = router;

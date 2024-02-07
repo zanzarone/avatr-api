@@ -26,6 +26,7 @@ const generate = async (req, res, next) => {
   //# Controlla gli errori di validazione
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    logWarn(JSON.stringify(req.body));
     return next(new Failure("Error on validation", 400, errors.array()));
   }
 
