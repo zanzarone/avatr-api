@@ -1,13 +1,13 @@
-const { logWarn } = require("../middleware/logger");
+// const { logWarn } = require("../middleware/logger");
 const allowedOrigins = require("./allowedOrigins");
 const { Failure } = require("./failure");
 const corsOptions = {
   origin: (origin, callback) => {
-    logWarn(
-      `Avat ${JSON.stringify(allowedOrigins)}, ${origin} ${
-        process.env.NODE_ENV
-      }`
-    );
+    // logWarn(
+    //   `Avat ${JSON.stringify(allowedOrigins)}, ${origin} ${
+    //     process.env.NODE_ENV
+    //   }`
+    // );
     if (
       process.env.NODE_ENV === "development" ||
       //! If you do not want to block
