@@ -15,7 +15,7 @@ const {
   BgType,
 } = require("../../config/defines");
 const { existsSync } = require("fs");
-const { logWarn } = require("../../middleware/logger");
+// const { logWarn } = require("../../middleware/logger");
 
 const IMAGE_SIZE = 128; // Adjust this based on your image size
 const CANVAS_WIDTH = IMAGE_SIZE;
@@ -26,7 +26,7 @@ const generate = async (req, res, next) => {
   //# Controlla gli errori di validazione
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    logWarn(JSON.stringify(req.body));
+    // logWarn(JSON.stringify(req.body));
     return next(new Failure("Error on validation", 400, errors.array()));
   }
 
@@ -63,7 +63,7 @@ const generate = async (req, res, next) => {
     );
   }
 
-  logWarn(JSON.stringify(sanitizedData));
+  // logWarn(JSON.stringify(sanitizedData));
 
   let images = [];
   try {
@@ -92,7 +92,6 @@ const generate = async (req, res, next) => {
     //# then i can load in memory
     images = await Promise.all(
       imagePaths.map((filePath) => {
-        console.log("path", filePath);
         return loadImage(filePath);
       })
     );

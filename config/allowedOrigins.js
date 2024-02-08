@@ -1,3 +1,2 @@
-const allowedOrigins = ["https://avatr.onrender.com", "http://localhost:3000"];
-
+const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
 module.exports = allowedOrigins;

@@ -17,7 +17,6 @@ const errorHandler = (failure, req, res, next) => {
     status = res.statusCode ? res.statusCode : 500;
   }
 
-  console.log(errors);
   let line = `${failure.name}: ${failure.message}, [${errors?.map(
     (e) => `${e},`
   )}]\t[${req.method}]\t[${req.url}]\t[${req.headers.origin}]`;

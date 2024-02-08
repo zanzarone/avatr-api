@@ -3,7 +3,10 @@ const { Failure } = require("./failure");
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    if (
+      allowedOrigins.indexOf(origin) !== -1 ||
+      process.env.NODE_ENV === "development"
+    ) {
       callback(null, true);
     } else {
       callback(new Failure("Not allowed by CORS", 401));
