@@ -9,8 +9,11 @@ const corsOptions = {
       }`
     );
     if (
-      allowedOrigins.indexOf(origin) !== -1 ||
-      process.env.NODE_ENV === "development"
+      process.env.NODE_ENV === "development" ||
+      //! If you do not want to block
+      //! server-to-server requests, add a !origin check in the origin function
+      !origin ||
+      allowedOrigins.indexOf(origin) !== -1
     ) {
       callback(null, true);
     } else {
