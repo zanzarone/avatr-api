@@ -11,6 +11,7 @@ chalk.level = 1; // Use colours in the VS Code Debug Window
 const logSuccess = (text) => log(chalk.green(text));
 const logWarn = (text) => log(chalk.yellow(text));
 const logError = (text) => log(chalk.red(text));
+const logInfo = (text) => log(chalk.blueBright(text));
 
 const logEvents = async (message, logFileName) => {
   const dateTime = format(new Date(), "yyyyMMdd\tHH:mm:ss");
@@ -34,4 +35,4 @@ const logger = (req, res, next) => {
   next();
 };
 
-module.exports = { logEvents, logger, logSuccess, logWarn, logError };
+module.exports = { logEvents, logger, logSuccess, logWarn, logError, logInfo };

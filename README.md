@@ -60,7 +60,8 @@ This project handles the REST calls made by the AvatR application.
    ```js
    NODE_ENV = ""; //'production' or 'development'
    PORT = ""; // port number where the server will listen
-   ALLOWED_ORIGINS = "[]"; // array of strings
+   DEV_ORIGIN = ""; // string for allowed origin on development;
+   REMOTE_ORIGIN = ""; //string for allowed origin on production;
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

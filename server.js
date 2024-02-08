@@ -3,7 +3,12 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 const path = require("path");
-const { logger, logEvents, logSuccess } = require("./middleware/logger");
+const {
+  logger,
+  logEvents,
+  logSuccess,
+  logInfo,
+} = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 // const bodyParser = require("body-parser");
@@ -40,4 +45,4 @@ app.all("*", (req, res) => {
 //# gestione dell'errore (anche di ADDRESS ALREADY IN USE)
 app.use(errorHandler);
 
-app.listen(PORT, () => logSuccess(`AvatR API running on port ${PORT}`));
+app.listen(PORT, () => logInfo(`AvatR API running on port ${PORT}`));
