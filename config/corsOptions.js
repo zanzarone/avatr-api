@@ -1,8 +1,13 @@
+const { logWarn } = require("../middleware/logger");
 const allowedOrigins = require("./allowedOrigins");
 const { Failure } = require("./failure");
-
 const corsOptions = {
   origin: (origin, callback) => {
+    logWarn(
+      `Avat ${JSON.stringify(allowedOrigins)}, ${origin} ${
+        process.env.NODE_ENV
+      }`
+    );
     if (
       allowedOrigins.indexOf(origin) !== -1 ||
       process.env.NODE_ENV === "development"

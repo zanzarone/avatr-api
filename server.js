@@ -14,7 +14,6 @@ const cookieParser = require("cookie-parser");
 // const bodyParser = require("body-parser");
 const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
-const allowedOrigins = require("./config/allowedOrigins");
 const PORT = process.env.PORT || 3500;
 
 app.use(logger);
@@ -46,8 +45,4 @@ app.all("*", (req, res) => {
 //# gestione dell'errore (anche di ADDRESS ALREADY IN USE)
 app.use(errorHandler);
 
-app.listen(PORT, () =>
-  logInfo(
-    `AvatR API running on port ${PORT}, ${JSON.stringify(allowedOrigins)}`
-  )
-);
+app.listen(PORT, () => logInfo(`AvatR API running on port ${PORT}`));
