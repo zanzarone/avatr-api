@@ -3,12 +3,7 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 const path = require("path");
-const {
-  logger,
-  logEvents,
-  logSuccess,
-  logInfo,
-} = require("./middleware/logger");
+const { logger, logEvents, logSuccess, logInfo } = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 // const bodyParser = require("body-parser");
@@ -29,7 +24,7 @@ app.get("^/$|/index(.html)?", (req, res) => {
 });
 
 //# routes
-app.use("/api/v1", require("./routes/v1/root"));
+app.use("/v1", require("./routes/v1/root"));
 
 app.all("*", (req, res) => {
   res.status(404);
