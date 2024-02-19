@@ -17,7 +17,9 @@ const corsOptions = {
     ) {
       callback(null, true);
     } else {
-      callback(new Failure("Not allowed by CORS", 401));
+      callback(
+        new Failure("Not allowed by CORS", 401, [{ code: 1, path: 2, msg: origin }])
+      );
     }
   },
   credentials: true,
