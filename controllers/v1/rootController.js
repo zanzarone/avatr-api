@@ -1,7 +1,7 @@
 const path = require("path");
 const { validationResult } = require("express-validator");
 const { createCanvas, loadImage } = require("canvas");
-const { Failure } = require("../../config/failure");
+const { Failure, Paths, SubCode, Code } = require("../../config/failure");
 const {
   BaseType,
   SkinType,
@@ -27,7 +27,15 @@ const generate = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     // logWarn(JSON.stringify(req.body));
-    return next(new Failure("Error on validation", 400, errors.array()));
+    return next(
+      new Failure(
+        "Error on validation",
+        Code.BadRequest,
+        errors.array(),
+        Paths.Generate,
+        SubCode.Validation
+      )
+    );
   }
 
   //# Il corpo JSON è valido e sanitizzato
@@ -59,7 +67,13 @@ const generate = async (req, res, next) => {
     !Object.keys(EyesColors).includes(`${eyes.color}`)
   ) {
     return next(
-      new Failure("Error on validation: " + JSON.stringify(sanitizedData), 400)
+      new Failure(
+        "Error on validation: " + JSON.stringify(sanitizedData),
+        Code.BadRequest,
+        null,
+        Paths.Generate,
+        SubCode.UnknownParams
+      )
     );
   }
 
@@ -86,7 +100,13 @@ const generate = async (req, res, next) => {
     for (let i = 0; i < imagePaths.length; i++) {
       const path = imagePaths[i];
       if (!existsSync(path)) {
-        throw new Failure(`No such file or directory for ${path}`);
+        throw new Failure(
+          `No such file or directory for ${path}`,
+          Code.Internal,
+          null,
+          Paths.Generate,
+          SubCode.MissingFile
+        );
       }
     }
     //# then i can load in memory
@@ -99,7 +119,15 @@ const generate = async (req, res, next) => {
     if (error instanceof Failure) {
       return next(error);
     }
-    return next(new Failure("Load image failed", 500));
+    return next(
+      new Failure(
+        "Load image failed",
+        Code.Internal,
+        null,
+        Paths.Generate,
+        SubCode.LoadImage
+      )
+    );
   }
 
   //# Create a canvas and context
@@ -116,7 +144,9 @@ const generate = async (req, res, next) => {
       // context.fillText(`Image ${index + 1}`, 0 + 10, 0 + 30);
     }
   } catch (err) {
-    return next(new Failure(err.message, 500));
+    return next(
+      new Failure(err.message, Code.Internal, null, Paths.Generate, SubCode.Draw)
+    );
   }
   //# Convert the canvas to a buffer and send it as the response
   const buffer = canvas.toBuffer("image/png");

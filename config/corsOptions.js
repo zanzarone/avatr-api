@@ -1,6 +1,6 @@
 // const { logWarn } = require("../middleware/logger");
 const allowedOrigins = require("./allowedOrigins");
-const { Failure } = require("./failure");
+const { Failure, Paths, SubCode } = require("./failure");
 const corsOptions = {
   origin: (origin, callback) => {
     // logWarn(
@@ -18,7 +18,13 @@ const corsOptions = {
       callback(null, true);
     } else {
       callback(
-        new Failure("Not allowed by CORS", 401, [{ code: 1, path: 2, msg: origin }])
+        new Failure(
+          "Not allowed by CORS",
+          Code.Internal,
+          [{ path: Paths.Cors, msg: origin }],
+          Paths.Cors,
+          SubCode.Validation
+        )
       );
     }
   },
